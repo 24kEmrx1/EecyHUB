@@ -1,4 +1,5 @@
 local G2L = {};
+local DRAG_GUI = true
 G2L["1"] = Instance.new("ScreenGui", game:GetService("CoreGui").RobloxGui);
 G2L["1"]["Name"] = [[EecyHUB]];
 G2L["1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
@@ -287,6 +288,7 @@ local script = G2L["21"];
 			moveConnection = game:GetService("UserInputService").InputChanged:Connect(function(moveInput)
 				if moveInput.UserInputType == Enum.UserInputType.MouseMovement then
 					update(moveInput)
+					DRAG_GUI = false
 				end
 			end)
 	
@@ -295,6 +297,7 @@ local script = G2L["21"];
 				if endInput.UserInputType == Enum.UserInputType.MouseButton1 then
 					moveConnection:Disconnect()
 					releaseConnection:Disconnect()
+					DRAG_GUI = true
 				end
 			end)
 		end
@@ -313,6 +316,7 @@ local script = G2L["25"];
 	local da = nil
 	local db = nil
 	y.InputBegan:Connect(function(b)
+		if not DRAG_GUI then return end
 		if (b.UserInputType == Enum.UserInputType.MouseButton1 or b.UserInputType == Enum.UserInputType.Touch) and x:GetFocusedTextBox() == nil then
 			z = true
 			da = b.Position
@@ -325,11 +329,13 @@ local script = G2L["25"];
 		end
 	end)
 	y.InputChanged:Connect(function(b)
+		if not DRAG_GUI then return end
 		if b.UserInputType == Enum.UserInputType.MouseMovement or b.UserInputType == Enum.UserInputType.Touch then
 			ba = b
 		end
 	end)
 	x.InputChanged:Connect(function(c)
+		if not DRAG_GUI then return end
 		if c == ba and z then
 			local Delta = c.Position - da
 			local Position = UDim2.new(db.X.Scale, db.X.Offset + Delta.X, db.Y.Scale, db.Y.Offset + Delta.Y)
